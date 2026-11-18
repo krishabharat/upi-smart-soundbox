@@ -52,6 +52,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Vercel Serverless Path Normalizer Middleware
+@app.middleware("http")
+async def vercel_path_normalizer(request, call_next):
+    path = request.scope.get("path", "")
+    for prefix in ["/api/index.py", "/api/index"]:
+        if path.startswith(prefix):
+            remainder = path[len(prefix):]
+            request.scope["path"] = remainder if remainder else "/"
+            break
+    if request.scope.get("path") in ["/api", "/api/"]:
+        request.scope["path"] = "/"
+    elif request.scope.get("path") in ["/api/docs", "/api/docs/"]:
+        request.scope["path"] = "/docs"
+    elif request.scope.get("path") in ["/api/health", "/api/health/"]:
+        request.scope["path"] = "/health"
+    elif request.scope.get("path") in ["/api/openapi.json"]:
+        request.scope["path"] = "/openapi.json"
+    return await call_next(request)
+
 # Include API Routers
 app.include_router(merchants.router)
 app.include_router(payments.router)

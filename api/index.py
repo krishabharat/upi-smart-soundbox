@@ -18,3 +18,4 @@ from app.main import app
 
 # Export ASGI application for Vercel
 __all__ = ["app"]
+

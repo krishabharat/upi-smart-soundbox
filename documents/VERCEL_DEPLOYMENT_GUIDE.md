@@ -80,3 +80,4 @@ Vercel is a **Serverless (Function-as-a-Service)** platform:
 - Serverless functions have execution timeouts (typically 10 to 60 seconds).
 - While REST endpoints (`/health`, `/merchants`, `/payments/verify`, `/bridge/forward`, webhooks) work on Vercel, long-lived background SSE audio streams (`/api/v1/merchants/{id}/stream`) require an always-on connection.
 - For 24/7 background streaming in production, platforms like **Render**, **Railway**, **Fly.io**, or an **Ubuntu VPS** are recommended alongside Vercel.
+
