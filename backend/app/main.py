@@ -52,24 +52,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Vercel Serverless Path Normalizer Middleware
-@app.middleware("http")
-async def vercel_path_normalizer(request, call_next):
-    path = request.scope.get("path", "")
-    for prefix in ["/api/index.py", "/api/index"]:
-        if path.startswith(prefix):
-            remainder = path[len(prefix):]
-            request.scope["path"] = remainder if remainder else "/"
-            break
-    if request.scope.get("path") in ["/api", "/api/"]:
-        request.scope["path"] = "/"
-    elif request.scope.get("path") in ["/api/docs", "/api/docs/"]:
-        request.scope["path"] = "/docs"
-    elif request.scope.get("path") in ["/api/health", "/api/health/"]:
-        request.scope["path"] = "/health"
-    elif request.scope.get("path") in ["/api/openapi.json"]:
-        request.scope["path"] = "/openapi.json"
-    return await call_next(request)
+# Vercel Serverless Path Restoration ASGI Middleware
+class VercelOriginalPathMiddleware:
+    """
+    On Vercel, catch-all rewrites in vercel.json rewrite scope['path'] to the destination
+    file (/api/index.py). Vercel passes the user's actual requested URL in the 'x-matched-path'
+    header. This ASGI middleware restores the original path so POST, GET, PUT and all HTTP
+    verbs reach their intended API endpoints instead of returning 405 Method Not Allowed.
+    """
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] in ("http", "websocket"):
+            headers = dict(scope.get("headers", []))
+            matched_path = headers.get(b"x-matched-path") or headers.get(b"x-vercel-matched-path")
+            if matched_path:
+                orig = matched_path.decode("utf-8")
+                if "?" in orig:
+                    path_only, query_str = orig.split("?", 1)
+                    scope["path"] = path_only
+                    scope["query_string"] = query_str.encode("utf-8")
+                else:
+                    scope["path"] = orig
+            else:
+                path = scope.get("path", "")
+                for prefix in ["/api/index.py", "/api/index"]:
+                    if path.startswith(prefix):
+                        remainder = path[len(prefix):]
+                        scope["path"] = remainder if remainder else "/"
+                        break
+                if scope.get("path") in ["/api", "/api/"]:
+                    scope["path"] = "/"
+                elif scope.get("path") in ["/api/docs", "/api/docs/"]:
+                    scope["path"] = "/docs"
+                elif scope.get("path") in ["/api/health", "/api/health/"]:
+                    scope["path"] = "/health"
+                elif scope.get("path") in ["/api/openapi.json"]:
+                    scope["path"] = "/openapi.json"
+
+        await self.app(scope, receive, send)
+
+app.add_middleware(VercelOriginalPathMiddleware)
 
 # Include API Routers
 app.include_router(merchants.router)
