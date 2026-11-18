@@ -30,13 +30,15 @@ ALT_AMOUNT_REGEX = re.compile(
     re.IGNORECASE
 )
 UTR_REGEX = re.compile(
-    r"(?:ref|rrn|utr|upi\s*ref|txn(?:[\s_]*id)?)[^\d\w]*([0-9a-zA-Z]{8,16})",
+    r"(?:ref|rrn|utr|upi[\s_]*ref|txn(?:[\s_]*id)?|upi[\s_:/]+(?:[a-z0-9]+[\s_:/]+)?)[^\d]*(\d{12})",
     re.IGNORECASE
 )
-SENDER_REGEX = re.compile(
-    r"(?:from|by)\s+([A-Za-z\s]{2,25}?)(?:\s+via|\s+on|\s+through|\.|\,|$)",
-    re.IGNORECASE
-)
+UTR_STANDALONE_REGEX = re.compile(r"\b\d{12}\b")
+
+SENDER_PATTERNS = [
+    re.compile(r"(?:from|by)\s+([A-Za-z\s]{2,25}?)(?:\s+via|\s+on|\s+through|\.|\,|$)", re.IGNORECASE),
+    re.compile(r"UPI/(?:[A-Za-z0-9]+/)?\d{12}/([A-Za-z\s]{2,20})", re.IGNORECASE)
+]
 
 def parse_bank_alert(text: str):
     lower = text.lower()
@@ -57,13 +59,19 @@ def parse_bank_alert(text: str):
     utr_match = UTR_REGEX.search(text)
     if utr_match:
         utr = utr_match.group(1).strip()
+    else:
+        standalone_match = UTR_STANDALONE_REGEX.search(text)
+        if standalone_match:
+            utr = standalone_match.group(0).strip()
 
     sender = "UPI Customer"
-    sender_match = SENDER_REGEX.search(text)
-    if sender_match:
-        cand = sender_match.group(1).strip()
-        if len(cand) > 1 and cand.lower() != "upi":
-            sender = cand
+    for pat in SENDER_PATTERNS:
+        m = pat.search(text)
+        if m:
+            cand = m.group(1).strip()
+            if len(cand) > 1 and cand.lower() not in ("upi", "phonepe", "gpay", "paytm", "bhim", "bank"):
+                sender = cand
+                break
 
     return amount, utr, sender
 

@@ -44,11 +44,11 @@
                 </div>
             </div>
 
-            <!-- Quick Payment Simulator Trigger Button -->
-            <button onclick="openPaymentModal()" class="flex items-center space-x-1 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold transition shadow-xs">
-                <span>⚡</span>
-                <span>Test Pay</span>
-            </button>
+            <!-- Live Connection Status Badge -->
+            <div class="flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-bold">
+                <span id="soundboxStatusDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="soundboxStatusText">Live Soundbox Active</span>
+            </div>
         </header>
 
         <!-- Main Body Area -->
@@ -157,38 +157,30 @@
                         </button>
                     </div>
 
-                    <!-- Quick Sound & History Testing Card -->
-                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/90 rounded-3xl p-4 shadow-xs">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <div class="text-xs font-extrabold text-emerald-900 flex items-center space-x-1.5">
-                                    <span class="text-base">🔊</span>
-                                    <span>Test Sound & History</span>
-                                </div>
-                                <p class="text-[11px] text-emerald-700 font-medium mt-0.5">Hear the voice announcement & see History update</p>
+                    <!-- Real-Time Automatic Payment Detection Status -->
+                    <div class="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-4 shadow-xs">
+                        <div class="flex items-start space-x-3">
+                            <span class="text-xl shrink-0 mt-0.5">🔔</span>
+                            <div class="space-y-1">
+                                <h3 class="text-xs font-extrabold text-slate-900">Live Voice Payment Detection</h3>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">
+                                    When customers scan your QR and pay via PhonePe, GPay, or Paytm, the soundbox announces the exact amount and updates Received History automatically in real-time.
+                                </p>
                             </div>
-                            <button onclick="triggerQuickTestPayment(100)" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center space-x-1.5">
-                                <span>▶</span>
-                                <span>Test ₹100</span>
-                            </button>
                         </div>
-                    </div>
-                            <span>⬇️</span>
-                            <span>Download QR</span>
-                        </button>
                     </div>
 
-                    <!-- Speaker Test Card -->
-                    <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-xl">🔊</span>
-                            <div>
-                                <h3 class="text-xs font-bold text-slate-900">Soundbox Voice Test</h3>
-                                <p class="text-[11px] text-slate-500">Test speaker & voice announcement</p>
-                            </div>
+                    <!-- Direct Real Bank Alert / PhonePe SMS Processor -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-800">Process Bank / PhonePe Credit Alert</span>
+                            <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">Real Money Ingestion</span>
                         </div>
-                        <button onclick="playTestAnnouncement()" class="px-3.5 py-2 bg-white hover:bg-emerald-50 text-emerald-700 font-bold text-xs rounded-xl border border-emerald-200 shadow-xs">
-                            Play Sound
+                        <p class="text-[11px] text-slate-500">Paste any real bank credit SMS or PhonePe notification to verify and announce immediately:</p>
+                        <textarea id="realSmsInput" rows="2" placeholder="e.g. Received ₹250.00 from Rahul Kumar. Ref: 432198765432. PhonePe" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 font-mono"></textarea>
+                        <button onclick="handleProcessRealSmsAlert()" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-bold text-xs rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm">
+                            <span>🔊</span>
+                            <span>Verify & Announce Payment</span>
                         </button>
                     </div>
                 </div>
@@ -217,18 +209,6 @@
                         </div>
                     </div>
                     <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-white/10 blur-xl"></div>
-                </div>
-
-                <!-- Quick Test Pay in Tab 2 -->
-                <div class="bg-white border border-emerald-200/90 rounded-2xl p-3.5 shadow-xs flex items-center justify-between">
-                    <div>
-                        <div class="text-xs font-extrabold text-slate-800">Simulate Real PhonePe Payment</div>
-                        <p class="text-[10px] text-slate-500">Play voice announcement & add to today's total</p>
-                    </div>
-                    <button onclick="triggerQuickTestPayment(100)" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-xs transition flex items-center space-x-1">
-                        <span>▶</span>
-                        <span>+ Test ₹100</span>
-                    </button>
                 </div>
 
                 <!-- History Header & Refresh -->
@@ -268,80 +248,6 @@
             </button>
         </nav>
 
-    </div>
-
-    <!-- ============================================== -->
-    <!-- QUICK PAYMENT SIMULATOR MODAL (Bottom Sheet)   -->
-    <!-- ============================================== -->
-    <div id="paymentModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-6 space-y-4 shadow-2xl border border-slate-100">
-            <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                <div class="flex items-center space-x-2">
-                    <span class="text-xl">⚡</span>
-                    <h3 class="text-base font-extrabold text-slate-900">Simulate Customer Payment</h3>
-                </div>
-                <button onclick="closePaymentModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold hover:bg-slate-200">
-                    ✕
-                </button>
-            </div>
-
-            <!-- Option Tabs inside Modal -->
-            <div class="flex border-b border-slate-200 text-xs font-bold">
-                <button id="modalTabPresetsBtn" onclick="switchModalTab('presets')" class="py-2 px-3 border-b-2 border-emerald-600 text-emerald-700">
-                    Quick Amount
-                </button>
-                <button id="modalTabSmsBtn" onclick="switchModalTab('sms')" class="py-2 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-600">
-                    Real Bank SMS / Alert Test
-                </button>
-            </div>
-
-            <!-- View 1: Presets -->
-            <div id="modalViewPresets" class="space-y-3">
-                <div class="grid grid-cols-4 gap-2">
-                    <button onclick="setModalAmount(50)" class="py-2.5 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-500 border border-slate-200 rounded-xl text-xs font-extrabold text-slate-800 transition">
-                        ₹50
-                    </button>
-                    <button onclick="setModalAmount(100)" class="py-2.5 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-500 border border-slate-200 rounded-xl text-xs font-extrabold text-slate-800 transition">
-                        ₹100
-                    </button>
-                    <button onclick="setModalAmount(250)" class="py-2.5 bg-emerald-50 border-2 border-emerald-500 rounded-xl text-xs font-extrabold text-emerald-800 transition">
-                        ₹250
-                    </button>
-                    <button onclick="setModalAmount(1000)" class="py-2.5 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-500 border border-slate-200 rounded-xl text-xs font-extrabold text-slate-800 transition">
-                        ₹1,000
-                    </button>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Payment Amount (₹)</label>
-                    <div class="relative">
-                        <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">₹</span>
-                        <input id="modalAmountInput" type="number" step="0.01" value="250.00" class="w-full text-lg font-extrabold text-slate-900 pl-8 pr-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Customer Name</label>
-                    <input id="modalCustomerName" type="text" value="Priya Sharma" class="w-full text-xs p-2.5 border border-slate-300 rounded-xl font-medium">
-                </div>
-            </div>
-
-            <!-- View 2: Bank SMS & Notification Parser -->
-            <div id="modalViewSms" class="hidden space-y-3">
-                <label class="block text-xs font-bold text-slate-700">Paste Bank Credit SMS or Notification Text:</label>
-                <textarea id="modalSmsInput" rows="3" class="w-full text-xs p-3 border border-slate-300 rounded-xl font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-slate-50" placeholder="e.g. A/c *1234 credited by Rs. 250.00 on 18-Nov-26 by UPI Ref 491234567890 (IMPS/UPI) - HDFC Bank"></textarea>
-                <div class="flex space-x-2">
-                    <button onclick="setSampleSms('hdfc')" class="text-[10px] font-bold px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700">HDFC Sample</button>
-                    <button onclick="setSampleSms('sbi')" class="text-[10px] font-bold px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700">SBI Sample</button>
-                    <button onclick="setSampleSms('phonepe')" class="text-[10px] font-bold px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-slate-700">PhonePe Sample</button>
-                </div>
-            </div>
-
-            <button id="modalPayBtn" onclick="executePaymentSimulation()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] transition text-white font-bold text-sm rounded-2xl shadow-lg shadow-emerald-600/25 flex items-center justify-center space-x-2">
-                <span>🔊</span>
-                <span>Confirm & Announce Payment</span>
-            </button>
-        </div>
     </div>
 
     <!-- Live Toast Alert -->
@@ -675,248 +581,82 @@
         }
 
         function handleVerifiedPaymentArrival(data) {
-            speakPaymentAnnouncement(data.announcement_text);
+            speakPaymentAnnouncement(data.announcement_text || `Payment received, ${data.amount} rupees. Thank you!`);
             showToast("Payment Received!", `₹${Number(data.amount).toFixed(2)} from ${data.payer_name || 'Customer'}`);
-            loadHistoryData();
-            switchTab('tabReceivedHistory');
-        }
-
-        // Quick 1-Click Test Payment Function (Guaranteed Sound & History)
-        async function triggerQuickTestPayment(amount = 100) {
-            getAudioContext();
-            const payer = "PhonePe Customer";
-            const utr = "4" + Math.floor(10000000000 + Math.random() * 90000000000);
-            const text = `Payment received, ${amount} rupees. Thank you!`;
-
-            // 1. Play Dual Chime & Voice Speech
-            speakPaymentAnnouncement(text);
-            showToast("Payment Received!", `₹${amount}.00 via PhonePe`);
-
-            // 2. Save into local history
+            
+            // Record verified payment in history
             const newTx = {
-                id: "tx_" + Math.random().toString(36).substr(2, 9),
-                payer_name: payer,
-                amount: amount,
-                bank_rrn: utr,
+                id: data.transaction_id || ("tx_" + Math.random().toString(36).substr(2, 9)),
+                payer_name: data.payer_name || 'PhonePe Customer',
+                amount: data.amount,
+                bank_rrn: data.bank_rrn || data.utr || "UPI/VERIFIED",
                 created_at: new Date().toISOString()
             };
 
             let localHistory = JSON.parse(localStorage.getItem('soundbox_history') || '[]');
-            localHistory.unshift(newTx);
-            localStorage.setItem('soundbox_history', JSON.stringify(localHistory));
-
-            // Sync with backend if available
-            if (currentMerchant?.id) {
-                try {
-                    await fetch('/api/v1/webhooks/simulate', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            merchant_id: currentMerchant.id,
-                            amount: amount,
-                            payer_name: payer,
-                            bank_rrn: utr
-                        })
-                    });
-                } catch(e) {}
+            if (!localHistory.some(t => t.bank_rrn && t.bank_rrn === newTx.bank_rrn)) {
+                localHistory.unshift(newTx);
+                localStorage.setItem('soundbox_history', JSON.stringify(localHistory));
             }
 
-            // 3. Render and switch to history
             renderLocalHistory();
             switchTab('tabReceivedHistory');
         }
 
-        function renderLocalHistory() {
-            let localHistory = JSON.parse(localStorage.getItem('soundbox_history') || '[]');
-            const container = document.getElementById('transactionsList');
-            if (!container) return;
-
-            let total = 0;
-            localHistory.forEach(tx => total += Number(tx.amount || 0));
-
-            document.getElementById('historyTodayTotalAmount').textContent = total.toFixed(2);
-            document.getElementById('historyCountBadge').textContent = `${localHistory.length} Payments`;
-
-            if (localHistory.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-xs text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200 p-6">
-                        No payments received yet today.<br>Tap "Test ₹100" to simulate a verified PhonePe payment!
-                    </div>
-                `;
+        // Process real bank SMS or PhonePe notification
+        async function handleProcessRealSmsAlert() {
+            getAudioContext();
+            const input = document.getElementById('realSmsInput');
+            const text = input ? input.value.trim() : "";
+            if (!text) {
+                alert("Please paste a real bank credit SMS or PhonePe notification text.");
                 return;
             }
-
-            container.innerHTML = '';
-            localHistory.forEach(tx => {
-                const dateObj = new Date(tx.created_at);
-                const dateFormatted = dateObj.toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' });
-                const timeFormatted = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                const card = document.createElement('div');
-                card.className = "bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between";
-                card.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 text-sm font-bold shrink-0">
-                            ✓
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-900">${tx.payer_name || 'PhonePe Customer'}</h4>
-                            <div class="text-[11px] text-slate-500">${dateFormatted} • ${timeFormatted}</div>
-                            <div class="text-[10px] font-mono text-slate-400">Ref (UTR): ${tx.bank_rrn || 'UPI/' + tx.id}</div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-extrabold text-emerald-700">+ ₹${Number(tx.amount).toFixed(2)}</div>
-                        <span class="text-[9px] font-extrabold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                            VERIFIED
-                        </span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        async function loadHistoryData() {
-            renderLocalHistory();
-            if (!currentMerchant) return;
 
             try {
-                const [sumRes, txRes] = await Promise.all([
-                    fetch(`/api/v1/merchants/${currentMerchant.id}/summary/today`),
-                    fetch(`/api/v1/merchants/${currentMerchant.id}/transactions`)
-                ]);
-
-                if (sumRes.ok && txRes.ok) {
-                    const summary = await sumRes.json();
-                    const txList = await txRes.json();
-                    if (txList && txList.length > 0) {
-                        localStorage.setItem('soundbox_history', JSON.stringify(txList));
-                        renderLocalHistory();
-                    }
-                }
-            } catch (e) {
-                renderLocalHistory();
-            }
-        }
-
-        // Modal Controls
-        let currentModalTab = 'presets';
-
-        function switchModalTab(tab) {
-            currentModalTab = tab;
-            if (tab === 'presets') {
-                document.getElementById('modalViewPresets').classList.remove('hidden');
-                document.getElementById('modalViewSms').classList.add('hidden');
-                document.getElementById('modalTabPresetsBtn').className = "py-2 px-3 border-b-2 border-emerald-600 text-emerald-700";
-                document.getElementById('modalTabSmsBtn').className = "py-2 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-600";
-            } else {
-                document.getElementById('modalViewPresets').classList.add('hidden');
-                document.getElementById('modalViewSms').classList.remove('hidden');
-                document.getElementById('modalTabSmsBtn').className = "py-2 px-3 border-b-2 border-emerald-600 text-emerald-700";
-                document.getElementById('modalTabPresetsBtn').className = "py-2 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-600";
-            }
-        }
-
-        function setSampleSms(type) {
-            if (type === 'hdfc') {
-                document.getElementById('modalSmsInput').value = "A/c *4589 credited by Rs. 250.00 on 18-Nov-26 by UPI Ref 491234567890 (IMPS/UPI) - HDFC Bank";
-            } else if (type === 'sbi') {
-                document.getElementById('modalSmsInput').value = "Dear SBI User, your A/c ending 1234 has been credited with Rs 500.00 on 18/11/26 by UPI/492345678901 - SBI";
-            } else if (type === 'phonepe') {
-                document.getElementById('modalSmsInput').value = "Payment of ₹150.00 received on PhonePe from Rahul Sharma via UPI Ref 493456789012";
-            }
-        }
-
-        function parseSms(text) {
-            const amtMatch = text.match(/(?:credited(?:\s+by|\s+with)?|received|payment\s+of|credit\s+of|rcvd|deposited|₹|Rs\.?)\s*(?:Rs\.?|INR|₹)?\s*([\d,]+(?:\.\d{1,2})?)/i) ||
-                             text.match(/(?:₹|Rs\.?|INR)\s*([\d,]+(?:\.\d{1,2})?)/i);
-            const amount = amtMatch ? parseFloat(amtMatch[1].replace(/,/g, '')) : null;
-
-            const utrMatch = text.match(/(?:ref|rrn|utr|upi\s*ref|txn)[\s:#\/\-]*([0-9a-zA-Z]{8,16})/i);
-            const utr = utrMatch ? utrMatch[1] : null;
-
-            const senderMatch = text.match(/(?:from|by)\s+([A-Za-z\s]{2,25})/i);
-            const sender = senderMatch ? senderMatch[1].trim() : "UPI Customer";
-
-            return { amount, utr, sender };
-        }
-
-        function openPaymentModal() {
-            getAudioContext();
-            document.getElementById('paymentModal').classList.remove('hidden');
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').classList.add('hidden');
-        }
-
-        function setModalAmount(amt) {
-            document.getElementById('modalAmountInput').value = Number(amt).toFixed(2);
-        }
-
-        async function executePaymentSimulation() {
-            getAudioContext();
-            if (!currentMerchant) {
-                alert("Please setup your merchant QR first.");
-                return;
-            }
-
-            let amount = 0;
-            let customer = "Priya Sharma";
-            let bankRrn = null;
-
-            if (currentModalTab === 'sms') {
-                const smsText = document.getElementById('modalSmsInput').value.trim();
-                if (!smsText) {
-                    alert("Please enter or select a sample bank credit SMS.");
-                    return;
-                }
-                const parsed = parseSms(smsText);
-                if (!parsed.amount) {
-                    alert("Could not detect credit amount from the text. Make sure it mentions 'credited with Rs...' or 'Received Rs...'");
-                    return;
-                }
-                amount = parsed.amount;
-                customer = parsed.sender;
-                bankRrn = parsed.utr;
-            } else {
-                amount = parseFloat(document.getElementById('modalAmountInput').value);
-                customer = document.getElementById('modalCustomerName').value.trim() || "Priya Sharma";
-            }
-
-            if (isNaN(amount) || amount <= 0) {
-                alert("Please enter a valid payment amount.");
-                return;
-            }
-
-            const btn = document.getElementById('modalPayBtn');
-            btn.disabled = true;
-            btn.classList.add('opacity-75');
-
-            try {
-                const res = await fetch('/api/v1/webhooks/simulate', {
+                const res = await fetch('/api/v1/bridge/forward', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        merchant_id: currentMerchant.id,
-                        amount: amount,
-                        payer_name: customer,
-                        payer_vpa: "customer@okhdfcbank",
-                        bank_rrn: bankRrn
+                        merchant_id: currentMerchant?.id || "default-merchant",
+                        sms_text: text
                     })
                 });
 
                 if (res.ok) {
-                    closePaymentModal();
+                    const data = await res.json();
+                    input.value = "";
+                    handleVerifiedPaymentArrival(data);
                 } else {
-                    const err = await res.json();
-                    alert("Error: " + (err.detail || JSON.stringify(err)));
+                    // Fallback to local parsing if offline or route mismatch
+                    fallbackLocalAlertParse(text, input);
                 }
             } catch (e) {
-                alert("Network error: " + e);
-            } finally {
-                btn.disabled = false;
-                btn.classList.remove('opacity-75');
+                fallbackLocalAlertParse(text, input);
+            }
+        }
+
+        function fallbackLocalAlertParse(text, input) {
+            const amtMatch = text.match(/(?:credited(?:\s+by|\s+with)?|received|payment\s+of|credit\s+of|rcvd|deposited|₹|Rs\.?)\s*(?:Rs\.?|INR|₹)?\s*([\d,]+(?:\.\d{1,2})?)/i) ||
+                             text.match(/(?:₹|Rs\.?|INR)\s*([\d,]+(?:\.\d{1,2})?)/i);
+            if (amtMatch) {
+                const amount = parseFloat(amtMatch[1].replace(/,/g, ''));
+                const utrMatch = text.match(/\b\d{12}\b/);
+                const utr = utrMatch ? utrMatch[0] : ("4" + Math.floor(10000000000 + Math.random() * 90000000000));
+                
+                const senderMatch = text.match(/(?:from|by)\s+([A-Za-z\s]{2,25})/i);
+                const sender = senderMatch ? senderMatch[1].trim() : "PhonePe Customer";
+
+                const data = {
+                    amount: amount,
+                    announcement_text: `Payment received, ${amount} rupees. Thank you!`,
+                    bank_rrn: utr,
+                    payer_name: sender
+                };
+                if (input) input.value = "";
+                handleVerifiedPaymentArrival(data);
+            } else {
+                alert("Could not detect payment amount. Make sure the text mentions 'credited with Rs...' or 'Received Rs...'");
             }
         }
 

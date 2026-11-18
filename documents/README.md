@@ -18,6 +18,7 @@ Welcome to the technical documentation repository for the **UPI Smart Soundbox**
 | Document | Description |
 | :--- | :--- |
 | **[ARCHITECTURE.md](ARCHITECTURE.md)** | Comprehensive technical architecture across Android Kotlin/Compose, Room DB, FastAPI backend, and SSE real-time stream. |
+| **[REAL_PAYMENT_INTEGRATION_AND_AI_RESEARCH.md](REAL_PAYMENT_INTEGRATION_AND_AI_RESEARCH.md)** | Deep research and guide on real UPI payment detection, PhonePe/bank alert parsing, and production webhook APIs. |
 | **[VERCEL_DEPLOYMENT_GUIDE.md](VERCEL_DEPLOYMENT_GUIDE.md)** | Guide to deploying on Vercel, solving 500 FUNCTION_INVOCATION_FAILED, and serverless best practices. |
 | **[TWO_PHONE_DAD_WORKPLACE_SETUP.md](TWO_PHONE_DAD_WORKPLACE_SETUP.md)** | Step-by-step practical guide solving the setup where Dad is at the shop and Mom's phone holds the bank SIM. |
 | **[NPCI_UPI_SPECIFICATION.md](NPCI_UPI_SPECIFICATION.md)** | Complete specification of NPCI UPI payment QR strings (`upi://pay?pa=...`), standard parameters, and checksum rules. |
