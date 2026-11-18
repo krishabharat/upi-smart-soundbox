@@ -55,10 +55,8 @@ app.add_middleware(
 # Vercel Serverless Path Restoration ASGI Middleware
 class VercelOriginalPathMiddleware:
     """
-    On Vercel, catch-all rewrites in vercel.json rewrite scope['path'] to the destination
-    file (/api/index.py). Vercel passes the user's actual requested URL in the 'x-matched-path'
-    header. This ASGI middleware restores the original path so POST, GET, PUT and all HTTP
-    verbs reach their intended API endpoints instead of returning 405 Method Not Allowed.
+    On Vercel, catch-all rewrites in vercel.json route to the function file.
+    This ASGI middleware preserves the requested API path and methods.
     """
     def __init__(self, app):
         self.app = app
@@ -69,26 +67,23 @@ class VercelOriginalPathMiddleware:
             matched_path = headers.get(b"x-matched-path") or headers.get(b"x-vercel-matched-path")
             if matched_path:
                 orig = matched_path.decode("utf-8")
-                if "?" in orig:
-                    path_only, query_str = orig.split("?", 1)
-                    scope["path"] = path_only
-                    scope["query_string"] = query_str.encode("utf-8")
-                else:
-                    scope["path"] = orig
+                if orig not in ("/api/index.py", "/api/index", "/api/index.py/", "/api/index/"):
+                    if "?" in orig:
+                        path_only, query_str = orig.split("?", 1)
+                        scope["path"] = path_only
+                        scope["query_string"] = query_str.encode("utf-8")
+                    else:
+                        scope["path"] = orig
             else:
                 path = scope.get("path", "")
-                for prefix in ["/api/index.py", "/api/index"]:
-                    if path.startswith(prefix):
-                        remainder = path[len(prefix):]
-                        scope["path"] = remainder if remainder else "/"
-                        break
-                if scope.get("path") in ["/api", "/api/"]:
-                    scope["path"] = "/"
-                elif scope.get("path") in ["/api/docs", "/api/docs/"]:
+                if path in ("/api/index.py", "/api/index", "/api", "/api/"):
+                    if scope.get("method") == "GET":
+                        scope["path"] = "/"
+                elif path.startswith("/api/docs"):
                     scope["path"] = "/docs"
-                elif scope.get("path") in ["/api/health", "/api/health/"]:
+                elif path.startswith("/api/health"):
                     scope["path"] = "/health"
-                elif scope.get("path") in ["/api/openapi.json"]:
+                elif path.startswith("/api/openapi.json"):
                     scope["path"] = "/openapi.json"
 
         await self.app(scope, receive, send)
@@ -101,6 +96,22 @@ app.include_router(payments.router)
 app.include_router(webhooks.router)
 app.include_router(soundbox_stream.router)
 app.include_router(bridge.router)
+
+# Root POST fallback: Handles merchant registration even if Vercel routes POST to root
+from app.schemas import MerchantCreate, MerchantResponse
+from app.routers.merchants import register_merchant
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.database import get_db
+
+@app.post("/", response_model=MerchantResponse, include_in_schema=False)
+@app.post("/api/index.py", response_model=MerchantResponse, include_in_schema=False)
+@app.post("/api/index", response_model=MerchantResponse, include_in_schema=False)
+async def post_root_register(
+    payload: MerchantCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    return await register_merchant(payload, db)
 
 # Serve Simulator UI
 SIMULATOR_FILE = os.path.join(os.path.dirname(__file__), "static", "simulator.html")
