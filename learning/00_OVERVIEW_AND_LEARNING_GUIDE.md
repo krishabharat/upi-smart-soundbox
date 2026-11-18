@@ -42,3 +42,4 @@ However, physical soundbox devices have serious drawbacks:
 ![System Architecture](images/02_system_architecture.png)
 
 Continue your learning by reading **[Stage 1: Core UI & QR Engine](01_STAGE_1_CORE_UI_AND_QR_ENGINE.md)**!
+

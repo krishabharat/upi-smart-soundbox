@@ -1,6 +1,14 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import Optional
 import os
+from typing import Optional
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+is_serverless = (
+    os.getenv("VERCEL") is not None
+    or os.getenv("AWS_LAMBDA_FUNCTION_NAME") is not None
+    or os.getenv("LAMBDA_TASK_ROOT") is not None
+)
+default_db_path = "/tmp/soundbox.db" if is_serverless else "./soundbox.db"
+default_db_url = f"sqlite+aiosqlite:///{default_db_path}"
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="allow")
@@ -9,8 +17,8 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
     
-    # Database: SQLite async by default for zero-friction setup, PostgreSQL supported
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./soundbox.db")
+    # Database: In serverless (Vercel/Lambda), filesystem is read-only except /tmp
+    DATABASE_URL: str = os.getenv("DATABASE_URL", default_db_url)
     
     # Server configuration
     HOST: str = "0.0.0.0"

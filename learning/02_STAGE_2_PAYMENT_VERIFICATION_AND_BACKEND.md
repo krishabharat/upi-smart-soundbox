@@ -164,3 +164,4 @@ interface TransactionDao {
 
 ### Next Step:
 Now that transactions are verified and saved without duplicates, continue to **[Stage 3: Voice Announcement & Audio Engine](03_STAGE_3_VOICE_ANNOUNCEMENT_AND_AUDIO_ENGINE.md)** to learn how the dual-tone chime and voice alerts are produced!
+

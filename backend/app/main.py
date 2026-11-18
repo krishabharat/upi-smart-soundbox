@@ -2,7 +2,7 @@ import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
@@ -13,23 +13,26 @@ from sqlalchemy import select
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize DB schema
-    await init_db()
-    
-    # Auto-seed a default sample merchant if database is empty
-    async with AsyncSessionLocal() as session:
-        result = await session.execute(select(Merchant).limit(1))
-        merchant = result.scalar_one_or_none()
-        if not merchant:
-            sample_merchant = Merchant(
-                business_name="Sharma Kirana & General Store",
-                upi_id="sharmakirana@okhdfcbank",
-                mobile_number="9876543210",
-                mcc="5411"
-            )
-            session.add(sample_merchant)
-            await session.commit()
-            print(f"[UPI Soundbox] Seeded sample merchant: {sample_merchant.business_name} ({sample_merchant.id})")
+    # Initialize DB schema with serverless safety
+    try:
+        await init_db()
+        
+        # Auto-seed a default sample merchant if database is empty
+        async with AsyncSessionLocal() as session:
+            result = await session.execute(select(Merchant).limit(1))
+            merchant = result.scalar_one_or_none()
+            if not merchant:
+                sample_merchant = Merchant(
+                    business_name="Sharma Kirana & General Store",
+                    upi_id="sharmakirana@okhdfcbank",
+                    mobile_number="9876543210",
+                    mcc="5411"
+                )
+                session.add(sample_merchant)
+                await session.commit()
+                print(f"[UPI Soundbox] Seeded sample merchant: {sample_merchant.business_name} ({sample_merchant.id})")
+    except Exception as e:
+        print(f"[UPI Soundbox] Lifespan database initialization warning: {e}")
             
     yield
 
@@ -62,7 +65,10 @@ SIMULATOR_FILE = os.path.join(os.path.dirname(__file__), "static", "simulator.ht
 @app.get("/", include_in_schema=False)
 @app.get("/simulator", include_in_schema=False)
 async def get_simulator_portal():
-    return FileResponse(SIMULATOR_FILE)
+    if os.path.exists(SIMULATOR_FILE):
+        with open(SIMULATOR_FILE, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    return HTMLResponse(content="<h1>UPI Smart Soundbox Backend is Running!</h1><p>Visit /docs for OpenAPI documentation.</p>")
 
 @app.get("/health", tags=["Health"])
 async def health_check():

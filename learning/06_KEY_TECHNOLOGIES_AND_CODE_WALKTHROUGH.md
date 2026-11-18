@@ -147,3 +147,4 @@ wakeLock.acquire(10 * 60 * 1000L) // Partial wake lock
    Network signals in Indian markets can fluctuate. A local Room database ensures the merchant can view their transaction history even during internet drops.
 3. **Why Dual-Tone Chime before Voice?**
    Audio human-factor studies show that an immediate acoustic cue (ding-dong chime) alerts human hearing before speech processing begins, ensuring 100% of the spoken numbers are understood.
+

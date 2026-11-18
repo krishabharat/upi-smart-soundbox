@@ -57,3 +57,4 @@ All visual diagrams are located in [`learning/images/`](images/):
 - **[06. Key Technologies & Code Walkthrough](06_KEY_TECHNOLOGIES_AND_CODE_WALKTHROUGH.md)**
   - Comprehensive technology breakdown across Kotlin, Compose, FastAPI, and Web APIs.
   - Line-by-line review of core files and design patterns.
+

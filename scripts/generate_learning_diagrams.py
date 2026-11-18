@@ -641,3 +641,4 @@ if __name__ == "__main__":
         generate_app_screens_diagram(os.path.join(target_dir, "04_app_screens_and_ui_flow.png"))
         generate_verification_lifecycle(os.path.join(target_dir, "05_payment_verification_lifecycle.png"))
     print("All diagrams generated successfully!")
+

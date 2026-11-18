@@ -174,3 +174,4 @@ If the shopkeeper changes their bank account or updates their shop name, they cl
 
 ### Next Step:
 Now that the QR standee is generated, continue to **[Stage 2: Payment Verification & Backend Engine](02_STAGE_2_PAYMENT_VERIFICATION_AND_BACKEND.md)** to learn how real payments are captured and verified!
+

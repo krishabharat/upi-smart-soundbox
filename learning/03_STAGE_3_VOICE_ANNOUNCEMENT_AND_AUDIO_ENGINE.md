@@ -187,3 +187,4 @@ object AudioAnnouncementRegistry {
 
 ### Next Step:
 Now that the soundbox speaks verified payments, continue to **[Stage 4: The Two-Phone Problem & Background Sync](04_STAGE_4_THE_TWO_PHONE_PROBLEM_AND_BACKGROUND_SYNC.md)** to see how we solved the real-world family shop setup!
+
