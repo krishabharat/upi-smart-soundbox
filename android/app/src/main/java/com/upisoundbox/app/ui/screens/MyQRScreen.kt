@@ -3,6 +3,7 @@ package com.upisoundbox.app.ui.screens
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -408,14 +409,24 @@ fun MyQRScreen(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Show UPI ID
-                    Text(
-                        text = displayUpiId,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = FintechGreen,
-                        textAlign = TextAlign.Center
-                    )
+                    // UPI ID hidden for privacy as requested by merchant
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = FintechGreenLight,
+                        border = BorderStroke(1.dp, FintechGreen.copy(alpha = 0.25f))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "🔒 UPI Verified Merchant",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = FintechGreen
+                            )
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(14.dp))
 
