@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">UPI Smart Soundbox</string>
+    <string name="channel_id">soundbox_service_channel</string>
+    <string name="channel_name">Soundbox Active Service</string>
+    <string name="channel_desc">Keeps soundbox listening for real-time UPI payment confirmations</string>
+    <string name="notif_title">UPI Soundbox Active</string>
+    <string name="notif_listening">Listening for verified customer payments…</string>
+</resources>
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Modern Indian Fintech Colors (Emerald / Forest Green Accent) -->
+    <color name="fintech_green">#00875A</color>
+    <color name="fintech_green_dark">#006644</color>
+    <color name="fintech_green_light">#E3FCEF</color>
+    <color name="fintech_green_vibrant">#00BA74</color>
+    
+    <color name="surface_white">#FFFFFF</color>
+    <color name="background_soft">#F8FAFC</color>
+    <color name="card_stroke">#E2E8F0</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_tertiary">#94A3B8</color>
+</resources>
+
